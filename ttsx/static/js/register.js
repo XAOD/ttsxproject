@@ -32,8 +32,7 @@ $(function(){
 		else
 		{
 			error_check = true;
-			$(this).siblings('span').html('请勾选同意');
-			$(this).siblings('span').show();
+			$(this).siblings('span').html('请勾选同意').show();
 		}
 	});
 
@@ -42,14 +41,25 @@ $(function(){
 		var len = $('#user_name').val().length;
 		if(len<5||len>20)
 		{
-			$('#user_name').next().html('请输入5-20个字符的用户名')
-			$('#user_name').next().show();
+			$('#user_name').next().html('请输入5-20个字符的用户名').show();
 			error_name = true;
 		}
 		else
 		{
-			$('#user_name').next().hide();
-			error_name = false;
+
+			// 当用户名符合格式后,去数据库判断是否存在相同的用户名
+			// 单纯验证用户名选择get请求,第一个参数是请求地址,第二个参数是json,第三个参数是回调函数
+			$.get('/user/register_yz/',{'uname':$('#user_name').val()},function (data) {
+				if(data.result==1){
+
+					$('#user_name').next().html('用户名已经存在').show();
+					error_name = true;
+				}else {
+					$('#user_name').next().hide();
+					error_name = false;
+				}
+            });
+
 		}
 	}
 
@@ -57,8 +67,7 @@ $(function(){
 		var len = $('#pwd').val().length;
 		if(len<8||len>20)
 		{
-			$('#pwd').next().html('密码最少8位，最长20位')
-			$('#pwd').next().show();
+			$('#pwd').next().html('密码最少8位，最长20位').show();
 			error_password = true;
 		}
 		else
@@ -75,8 +84,7 @@ $(function(){
 
 		if(pass!=cpass)
 		{
-			$('#cpwd').next().html('两次输入的密码不一致')
-			$('#cpwd').next().show();
+			$('#cpwd').next().html('两次输入的密码不一致').show();
 			error_check_password = true;
 		}
 		else
@@ -97,8 +105,7 @@ $(function(){
 		}
 		else
 		{
-			$('#email').next().html('你输入的邮箱格式不正确')
-			$('#email').next().show();
+			$('#email').next().html('你输入的邮箱格式不正确').show();
 			error_check_password = true;
 		}
 
@@ -129,4 +136,4 @@ $(function(){
 
 
 
-})
+});
