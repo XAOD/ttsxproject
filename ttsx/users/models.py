@@ -18,3 +18,4 @@ class  TakeInfo(models.Model):
     taddr = models.CharField(max_length=100)#收货地址
     tcode = models.CharField(max_length=6)#邮编
     tphone = models.CharField(max_length=20)#手机号
+    userid = models.ForeignKey('UserInfo')#外键

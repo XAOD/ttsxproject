@@ -27,8 +27,13 @@ class Migration(migrations.Migration):
                 ('uname', models.CharField(max_length=20)),
                 ('upwd', models.CharField(max_length=40)),
                 ('umail', models.CharField(max_length=20)),
-                ('utel', models.CharField(max_length=20)),
-                ('uaddr', models.CharField(max_length=100)),
+                ('utel', models.CharField(default=b'', max_length=20)),
+                ('uaddr', models.CharField(default=b'', max_length=100)),
             ],
+        ),
+        migrations.AddField(
+            model_name='takeinfo',
+            name='userid',
+            field=models.ForeignKey(to='users.UserInfo'),
         ),
     ]
