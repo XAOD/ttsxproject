@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from models import *
 from hashlib import sha1
 from user_decorators import *
+from goods.models import GoodsInfo
 import datetime
 
 # Create your views here.
@@ -94,7 +95,12 @@ def loginout(request):
 @user_login
 def info(request):
     user = UserInfo.objects.get(pk=request.session['uid'])
-    context={'title':'用户中心','user':user}
+    gids = request.COOKIES.get('goodsid','').split(',')
+    gids.pop()
+    glist = []
+    for gid in gids:
+        glist.append(GoodsInfo.objects.get(id=gid))
+    context={'title':'用户中心','user':user,'glist':glist}
     return render(request,'users/info.html',context)
 #全部订单
 @user_login
