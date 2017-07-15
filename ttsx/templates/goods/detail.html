@@ -3,19 +3,41 @@
 	<script type="text/javascript">
 		$(function () {
 			$('#add_cart').click(function(){
-				var $add_x = $('#add_cart').offset().top;
-				var $add_y = $('#add_cart').offset().left;
-				var $to_x = $('#show_count').offset().top;
-				var $to_y = $('#show_count').offset().left;
-				$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'});
-				$(".add_jump").stop().animate({
-					'left': $to_y+7,
-					'top': $to_x+7},
-					"fast", function() {
-						$(".add_jump").fadeOut('fast',function(){
-							$('#show_count').html(2);
-						});
-				});
+			    //验证是否登陆
+				$.get('/user/islogin/',function (data) {
+				    gid = $('#gid').val();
+				    count = $('.num_show').val();
+					if(data.islogin){//已经登陆
+						$.get('/cart/add/',{'gid':gid,'count':count},function (data) {
+							if(data.result){
+								var $add_x = $('#add_cart').offset().top;
+								var $add_y = $('#add_cart').offset().left;
+								var $to_x = $('#show_count').offset().top;
+								var $to_y = $('#show_count').offset().left;
+								$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+									.stop()
+									.animate({
+										'left': $to_y+7,
+										'top': $to_x+7},
+										"fast", function() {
+											$(".add_jump").fadeOut('fast',function(){
+											    $.get('/cart/count/',function (data) {
+													$('#show_count').html(data.count);
+                                                });
+
+										});
+									});
+
+							}else {
+							    alert('添加失败,请重试')
+							}
+                        })
+
+					}else{//未登录
+					    location.href = '/user/login/'
+					}
+                });
+
 			});
 			$('.num_show').blur(function () {
 				num = parseInt($(this).val());
@@ -78,6 +100,7 @@
 			<div class="goods_num clearfix">
 				<div class="num_name fl">数 量：{{goods.gkuncun}}</div>
 				<div class="num_add fl">
+					<input type="hidden" id="gid" value="{{goods.id}}">
 					<input type="text" class="num_show fl" value="1">
 					<input type="hidden" id="kucun" value="{{goods.gkucun}}">
 					<a href="javascript:;" class="add fr">+</a>

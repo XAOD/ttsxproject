@@ -13,9 +13,10 @@ def register(request):
     context={'title':'注册','top':'0'}
     return render(request,'users/register.html',context)
 #注册处理
-def register_handle(requset):
+def register_handle(request):
     # 接收请求
-    post = requset.POST
+    # print request.get_full_path()
+    post = request.POST
     uname = post.get('uname')
     upwd = post.get('upwd')
     umail = post.get('email')
@@ -87,6 +88,12 @@ def login_handle(request):
             # 密码错误
             context['pwd_error']='1'
             return render(request,'users/login.html',context)
+#验证用户是否已经登陆
+def islogin(request):
+    result = 0
+    if request.session.has_key('uid'):
+        result = 1
+    return JsonResponse({'islogin':result})
 #退出
 def loginout(request):
     request.session.flush()

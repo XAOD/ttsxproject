@@ -34,7 +34,7 @@
 					<span>|</span>
 					<a href="/user/">用户中心</a>
 					<span>|</span>
-					<a href="../cart.html">我的购物车</a>
+					<a href="/cart/">我的购物车</a>
 					<span>|</span>
 					<a href="/user/order/">我的订单</a>
 				</div>
@@ -44,7 +44,7 @@
 {%if shopcar_show|default:'0' == '0'%}
 <div class="search_bar clearfix">
 		<a href="/" class="logo fl"><img src="/static/images/logo.png"></a>
-		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;用户中心</div>
+		<div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;{{title}}</div>
 		<div class="search_con fr">
 			<form method="get" action="/search/" target="_blank">
 			<input type="text" class="input_text fl" name="q" placeholder="搜索商品">
@@ -59,11 +59,20 @@
 		<form method="get" action="/search/" target="_blank">
 		<input type="text" class="input_text fl" name="q" placeholder="搜索商品">
 		<input type="submit" class="input_btn fr" value="搜索">
+		</form>
 	</div>
 	<div class="guest_cart fr">
-		<a href="#" class="cart_name fl">我的购物车</a>
-		<div class="goods_count fl" id="show_count">1</div></div>
+		<a href="/cart/" class="cart_name fl">我的购物车</a>
+		<div class="goods_count fl" id="show_count">0</div></div>
 </div>
+<script>
+	//完成显示购物车中的商品数量,不登录显示0,登录了则去数据库中查
+	if($('.login_btn').text().indexOf('登录')<0){//要检索的字符串值没有出现，则该方法返回 -1。
+		$.get('/cart/count/',function (data) {
+			$('#show_count').text(data.count)
+        })
+	}
+</script>
 {%endif%}
 {%endif%}
 {%block body%}
